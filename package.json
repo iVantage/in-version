@@ -1,7 +1,7 @@
 {
   "name": "in-version",
   "version": "0.1.0",
-  "description": "Git ditributable version tagging for private npm packages.",
+  "description": "Fancy git-tagging for npm modules.",
   "main": "bin/inv",
   "preferGlobal": true,
   "bin": {
