@@ -5,7 +5,24 @@ config.silent = true
 const path = require('path')
 const cwd = process.cwd()
 const pkgOld = JSON.parse(cat('./package.json'))
-const bump = 'patch'
+
+const args = process.argv
+const validBumps = [
+  'major', 'premajor',
+  'minor', 'preminor',
+  'patch', 'prepatch',
+  'prerelease'
+]
+
+// All our help flags get hit automatically :)
+if(3 !== args.length || validBumps.indexOf(args[2]) === -1) {
+  myV = JSON.parse(cat(`${__dirname}/../package.json`)).version
+  echo(`\n    inv@${myV}`)
+  echo(cat(`${__dirname}/../usage.txt`))
+  exit(0)
+}
+
+const bump = args[2]
 
 const files = [
   'package.json',
@@ -19,9 +36,10 @@ const files = [
   'LICENSE-*'
 ]
 .concat(pkgOld.files || [])
+.concat(pkgOld.main || [])
 
 const ignore = [
-  '.git',
+  // note that we don't want to kill .git
   'CVS',
   '.svn',
   '.hg',
@@ -34,14 +52,14 @@ const ignore = [
 ]
 
 // Bump the local package, we'll tag/commit outselves
-exec(`npm --no-git-tag-version ${bump}`
-// read new updated version
-const pkgNew = JSON.parse(cat('./package.json'))
-const versionNew = pkgNew.version
-exec(`git commit -m "chore: Bump version (v${versionNew})"`)
-exec(`git tag ${versionNew}-dev`)
+exec(`npm --no-git-tag-version version ${bump}`)
 
-// Mo
+// read new updated version
+const versionNew = JSON.parse(cat('./package.json')).version
+exec(`git commit package.json -m "chore: Bump version (v${versionNew})"`)
+exec(`git tag v${versionNew}-dev`)
+
+// A nice temp repo for us to work with
 const uid = `inv-${process.pid}-${Date.now()}`
 const tmp = path.join(tempdir(), uid)
 mkdir(tmp)
@@ -68,8 +86,10 @@ exec(`git commit -m  "chore: Bundling release v${versionNew}`)
 exec(`git tag v${versionNew}`)
 popd()
 
-// Copy tags back to cwd
+// Copy tags back to main repo
 exec(`git fetch --tags ${tmp}`)
 
 // Clean up tmp
-//rm('-rf', tmp)
+rm('-rf', tmp)
+
+console.log(`v${versionNew}`);

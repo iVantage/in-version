@@ -1,0 +1,22 @@
+
+    Usage: inv <bump>
+           inv (help | -h | --help)
+    
+    Where <bump> is one of:
+    
+    - A valid semver version, e.g. 1.2.3
+    - A semver component name:
+      - major
+      - premajor
+      - minor
+      - preminor
+      - patch
+      - prepatch
+      - prerelease
+    
+    This message is displayed if the argument passed to inv is one of help, -h,
+    --help, or if inv is run without arguments.
+    
+    The inv command will only run if your working copy is clean.
+    
+    Please see https://github.com/ivantage/in-version for more information.
