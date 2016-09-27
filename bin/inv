@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+require('shelljs/global')
+config.silent = true
+
+const path = require('path')
+const cwd = process.cwd()
+const pkgOld = JSON.parse(cat('./package.json'))
+const bump = 'patch'
+
+const files = [
+  'package.json',
+  'README',
+  'README.*',
+  'readme',
+  'readme.*',
+  'CHANGELOG',
+  'CHANGELOG.*',
+  'LICENSE',
+  'LICENSE-*'
+]
+.concat(pkgOld.files || [])
+
+const ignore = [
+  '.git',
+  'CVS',
+  '.svn',
+  '.hg',
+  '.lock-wscript',
+  '.wafpickle-N',
+  '*.swp',
+  '.DS_Store',
+  '._*',
+  'npm-debug.log'
+]
+
+// Bump the local package, we'll tag/commit outselves
+exec(`npm --no-git-tag-version ${bump}`
+// read new updated version
+const pkgNew = JSON.parse(cat('./package.json'))
+const versionNew = pkgNew.version
+exec(`git commit -m "chore: Bump version (v${versionNew})"`)
+exec(`git tag ${versionNew}-dev`)
+
+// Mo
+const uid = `inv-${process.pid}-${Date.now()}`
+const tmp = path.join(tempdir(), uid)
+mkdir(tmp)
+exec(`git clone . ${tmp}`)
+pushd(tmp)
+exec(`git checkout --orphan ${uid}`)
+exec('git rm -rf .')
+popd()
+
+// Add stuff from `files`
+files.forEach((f) => {
+  cp('-R', f, path.join(tmp))
+})
+
+// Correct if we copied over anything that should be ignored
+ignore.forEach((f) => {
+  rm('-rf', path.join(tmp, f))
+})
+
+// Commit and tag release files
+pushd(tmp)
+exec('git add -A')
+exec(`git commit -m  "chore: Bundling release v${versionNew}`)
+exec(`git tag v${versionNew}`)
+popd()
+
+// Copy tags back to cwd
+exec(`git fetch --tags ${tmp}`)
+
+// Clean up tmp
+//rm('-rf', tmp)
