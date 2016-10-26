@@ -53,7 +53,7 @@ const ignore = [
 
 const genericErrorMsg = [
   'Version updating failed!',
-  'Please make the current directory is the root of a git repository',
+  'Please make sure the current directory is the root of a git repository',
   'and you have no uncommitted changes.'
 ].join(' ')
 
