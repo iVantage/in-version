@@ -115,7 +115,7 @@ ignore.forEach((f) => {
 pushd(tmp)
 run([
   'git add -A',
-  `git commit -m  "chore: Bundling release v${versionNew}`,
+  `git commit -m  "chore: Bundling release v${versionNew}"`,
   `git tag v${versionNew}`
 ])
 popd()
