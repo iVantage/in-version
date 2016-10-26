@@ -55,4 +55,4 @@ MIT
 
 [npm-main]: https://docs.npmjs.com/files/package.json#main "npm main attribure"
 [npm-version]: https://docs.npmjs.com/cli/version "npm version"
-[usage]: blob/master/usage.txt "usage"
+[usage]: https://raw.githubusercontent.com/iVantage/in-version/master/usage.txt "usage"
