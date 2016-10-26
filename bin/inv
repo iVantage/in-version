@@ -103,7 +103,9 @@ popd()
 
 // Add stuff from `files`
 files.forEach((f) => {
-  cp('-R', f, path.join(tmp))
+  const fdir = path.join(tmp, path.dirname(f))
+  mkdir('-p', fdir)
+  cp('-R', f, fdir)
 })
 
 // Correct if we copied over anything that should be ignored
