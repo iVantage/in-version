@@ -7,7 +7,7 @@ install-able version of your module.
 
 The npm package manager allows you to install modules directly from a git
 endpoint. This is great but can lead to larger package installs than necessary.
-in-version creates tags that includes only those files which npm would grab
+in-version creates tags that include only those files which npm would grab
 during a publish - usually whatever is listed in the [main attribute][npm-main]
 of your package.json.
 
@@ -40,7 +40,7 @@ After running the above:
 
 - The minor version number in your package.json will be incremented (a la `npm
   version`)
-- A publish-things-only tag will have been created (e.g. v1.1.0)
+- A published-things-only tag will have been created (e.g. v1.1.0)
 - The working copy will have been tagged as the corresponding dev version
   (e.g. v1.1.0-dev)
 
